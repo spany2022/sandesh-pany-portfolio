@@ -1,4 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
+const navLinks = [
+  { label: 'Home', to: '/' },
+  { label: 'About', to: '/#about' },
+  { label: 'Services', to: '/#service' },
+  { label: 'Work', to: '/work' },
+  { label: 'Contact', to: '/#contact' },
+];
 
 const Navbar = () => {
   const [show, setShow] = useState(false);
@@ -13,14 +22,12 @@ const Navbar = () => {
 
   useEffect(() => {
     const controlNavbar = () => {
-      if (typeof window !== 'undefined') {
-        if (window.scrollY > lastScrollY && window.scrollY > 50) {
-          setShow(false);
-        } else {
-          setShow(true);
-        }
-        setLastScrollY(window.scrollY);
+      if (window.scrollY > lastScrollY && window.scrollY > 50) {
+        setShow(false);
+      } else {
+        setShow(true);
       }
+      setLastScrollY(window.scrollY);
     };
 
     window.addEventListener('scroll', controlNavbar);
@@ -33,41 +40,41 @@ const Navbar = () => {
 
   // Prevent scrolling when mobile menu is open
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
+    if (!isMenuOpen) return;
+    document.body.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = '';
     };
   }, [isMenuOpen]);
 
-  const navLinks = ['Home', 'About', 'Service', 'Project', 'Contact'];
+  const isScrolled = lastScrollY > 50;
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-5 md:px-12 md:py-6 transition-all duration-700 ease-in-out ${show ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'} ${isMenuOpen ? 'bg-black/90 backdrop-blur-md' : 'bg-transparent'}`}>
+      <nav className={`fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-5 md:px-12 md:py-6 transition-all duration-700 ease-in-out ${show ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'} ${isMenuOpen ? 'bg-black/90 backdrop-blur-md' : isScrolled ? 'bg-black/60 backdrop-blur-md' : 'bg-transparent'}`}>
         {/* Logo */}
-        <div className="text-white font-black text-xl md:text-2xl tracking-widest uppercase cursor-pointer relative z-50">
+        <Link to="/" className="text-white font-black text-xl md:text-2xl tracking-widest uppercase relative z-50" onClick={() => setIsMenuOpen(false)}>
           Sandesh
-        </div>
+        </Link>
 
         {/* Navigation Links (Desktop) */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((item) => (
-            <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
+            <Link
+              key={item.label}
+              to={item.to}
               className="text-gray-300 text-sm hover:text-[#ccff00] transition-colors uppercase tracking-wider font-medium"
             >
-              {item}
-            </a>
+              {item.label}
+            </Link>
           ))}
         </div>
 
         {/* Mobile Menu Icon */}
-        <div
+        <button
+          type="button"
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isMenuOpen}
           className="md:hidden text-white cursor-pointer hover:text-[#ccff00] transition-colors relative z-50 p-2"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
@@ -80,21 +87,22 @@ const Navbar = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
           )}
-        </div>
+        </button>
       </nav>
 
       {/* Mobile Menu Overlay */}
       <div className={`fixed inset-0 z-40 bg-[#0a0a0a] flex flex-col items-center justify-center transition-all duration-500 ease-in-out md:hidden ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
         <div className="flex flex-col items-center gap-8">
           {navLinks.map((item, index) => (
-            <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              className={`text-white text-3xl font-black uppercase tracking-widest hover:text-[#ccff00] transition-all duration-500 delay-${index * 100} ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
+            <Link
+              key={item.label}
+              to={item.to}
+              style={{ transitionDelay: isMenuOpen ? `${index * 100}ms` : '0ms' }}
+              className={`text-white text-3xl font-black uppercase tracking-widest hover:text-[#ccff00] transition-all duration-500 ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
               onClick={() => setIsMenuOpen(false)}
             >
-              {item}
-            </a>
+              {item.label}
+            </Link>
           ))}
         </div>
       </div>

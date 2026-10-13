@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -16,7 +17,8 @@ const servicesData = [
       'Integrate AI-powered features and automation',
       'Deliver clean, maintainable, production-ready code'
     ],
-    buttonText: 'VIEW PROJECTS'
+    buttonText: 'VIEW PROJECTS',
+    buttonLink: '/work'
   },
   {
     id: '02',
@@ -100,7 +102,8 @@ const Services = () => {
   }, []);
 
   useEffect(() => {
-    if (titleRef.current) {
+    if (!titleRef.current) return;
+    const ctx = gsap.context(() => {
       gsap.fromTo(
         titleRef.current,
         { y: -100, opacity: 0 },
@@ -116,7 +119,8 @@ const Services = () => {
           },
         }
       );
-    }
+    });
+    return () => ctx.revert();
   }, []);
 
 
@@ -229,13 +233,13 @@ const Services = () => {
                        {service.description}
                      </p>
                      {service.buttonText && (
-                       <button className={`font-bold uppercase tracking-wider text-xs md:text-sm px-6 py-3 border transition-colors duration-300 ease-in-out flex items-center gap-2 mt-4 ${
+                       <Link to={service.buttonLink} onClick={(e) => e.stopPropagation()} className={`font-bold uppercase tracking-wider text-xs md:text-sm px-6 py-3 border transition-colors duration-300 ease-in-out inline-flex self-start items-center gap-2 mt-4 ${
                          isHighlighted ? 'bg-black text-[#ccff00] border-black' : 'bg-[#ccff00] text-black border-[#ccff00]'
                        }`}>
                          <span className="w-2 h-2 border-t border-l border-current"></span>
                          {service.buttonText}
                          <span className="w-2 h-2 border-b border-r border-current"></span>
-                       </button>
+                       </Link>
                      )}
                    </div>
                 </div>

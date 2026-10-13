@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-// import aboutImage from '../assets/about_section/about_section.png';
 import aboutImage from '../assets/about_section/about_section1.png';
 
 import gsap from 'gsap';
@@ -35,46 +34,49 @@ const About = () => {
   const introDesktopRef = useRef(null);
 
   useEffect(() => {
-    const headings = [introMobileRef.current, introDesktopRef.current];
+    const ctx = gsap.context(() => {
+      const headings = [introMobileRef.current, introDesktopRef.current];
 
-    headings.forEach((heading) => {
-      if (heading) {
+      headings.forEach((heading) => {
+        if (heading) {
+          gsap.fromTo(
+            heading,
+            { y: 100, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 1,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: heading,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse',
+              },
+            }
+          );
+        }
+      });
+
+      if (textRef.current) {
+        const words = textRef.current.querySelectorAll('.word');
         gsap.fromTo(
-          heading,
-          { y: 100, opacity: 0 },
+          words,
+          { color: '#52525b', opacity: 0.2 },
           {
-            y: 0,
+            color: '#ffffff',
             opacity: 1,
-            duration: 1,
-            ease: 'power3.out',
+            stagger: 0.1,
             scrollTrigger: {
-              trigger: heading,
+              trigger: textRef.current,
               start: 'top 85%',
-              toggleActions: 'play none none reverse',
+              end: 'bottom 50%',
+              scrub: true,
             },
           }
         );
       }
     });
-
-    if (textRef.current) {
-      const words = textRef.current.querySelectorAll('.word');
-      gsap.fromTo(
-        words,
-        { color: '#52525b', opacity: 0.2 },
-        {
-          color: '#ffffff',
-          opacity: 1,
-          stagger: 0.1,
-          scrollTrigger: {
-            trigger: textRef.current,
-            start: 'top 85%',
-            end: 'bottom 50%',
-            scrub: true,
-          },
-        }
-      );
-    }
+    return () => ctx.revert();
   }, []);
 
   return (

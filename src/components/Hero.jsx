@@ -1,17 +1,40 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import centerImage from '../assets/hero_assets/hero_center1.png';
 
+// The intro plays on every page load / refresh. It only skips when the visitor
+// navigates back to Home from another page of the site (e.g. a case study).
+let introPlayed = false;
 
 const Hero = ({ onPreloadComplete }) => {
-  const [text, setText] = useState('SANDESH');
+  const [skipIntro] = useState(() => introPlayed);
+  const [text, setText] = useState(skipIntro ? 'PORTFOLIO' : 'SANDESH');
   const containerRef = useRef(null);
   const textRef = useRef(null);
   const subtitleRef = useRef(null);
   const buttonsRef = useRef(null);
   const imageRef = useRef(null);
 
+  // Keep the latest callback without re-running the intro effect
+  const onCompleteRef = useRef(onPreloadComplete);
   useEffect(() => {
+    onCompleteRef.current = onPreloadComplete;
+  });
+
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    const finalTop = isMobile ? "20%" : "45%";
+
+    // Coming back to Home within the site: show the final state straight away
+    if (skipIntro) {
+      gsap.set(containerRef.current, { top: finalTop });
+      gsap.set([subtitleRef.current, buttonsRef.current], { y: 0, opacity: 1 });
+      gsap.set(imageRef.current, { y: 0 });
+      onCompleteRef.current?.();
+      return;
+    }
+
     // Lock scroll during animation
     window.scrollTo(0, 0);
     document.body.style.overflow = 'hidden';
@@ -21,6 +44,7 @@ const Hero = ({ onPreloadComplete }) => {
     let iterations = 0;
     let intervalId;
     let timeoutId;
+    let tl;
 
     const imageLoadPromise = new Promise((resolve) => {
       const img = new window.Image();
@@ -60,17 +84,17 @@ const Hero = ({ onPreloadComplete }) => {
           clearInterval(intervalId);
 
           // GSAP Animation Sequence
-          const tl = gsap.timeline({
+          tl = gsap.timeline({
             onComplete: () => {
-              document.body.style.overflow = 'auto'; // Unlock scroll
-              if (onPreloadComplete) onPreloadComplete(); // Unlock rest of the website
+              document.body.style.overflow = ''; // Unlock scroll
+              introPlayed = true;
+              onCompleteRef.current?.(); // Unlock rest of the website
             }
           });
 
           // 1. Move the central text container up from 50% to its resting place
-          const isMobile = window.innerWidth < 768;
           tl.to(containerRef.current, {
-            top: isMobile ? "20%" : "45%",
+            top: finalTop,
             duration: 1.5,
             ease: "power3.inOut"
           }, "+=0.2"); // slight delay after scramble finishes
@@ -95,14 +119,16 @@ const Hero = ({ onPreloadComplete }) => {
 
     return () => {
       isMounted = false;
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = '';
       clearTimeout(timeoutId);
       clearInterval(intervalId);
+      tl?.kill();
     };
-  }, []);
+  }, [skipIntro]);
 
   return (
     <section
+      id="home"
       className="relative min-h-screen flex items-end justify-center bg-cover bg-center bg-no-repeat overflow-hidden"
       style={{ background: 'radial-gradient(circle, #222222 0%, #000000 80%)' }}
     >
@@ -114,7 +140,7 @@ const Hero = ({ onPreloadComplete }) => {
       >
         <h1
           ref={textRef}
-          className="text-[16vw] md:text-[10rem] lg:text-[14rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-300 to-gray-800 drop-shadow-2xl pr-4 md:pr-8 leading-none uppercase"
+          className="text-[clamp(3.5rem,15vw,14rem)] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-300 to-gray-800 drop-shadow-2xl pr-4 md:pr-8 leading-none uppercase"
         >
           {text}
         </h1>
@@ -130,15 +156,15 @@ const Hero = ({ onPreloadComplete }) => {
           ref={buttonsRef}
           className="absolute -bottom-20 left-1/2 -translate-x-1/2 md:translate-x-0 md:-bottom-12 md:left-auto md:right-20 flex items-center gap-2 md:gap-4 pointer-events-auto z-10 opacity-0 w-max"
         >
-          <a href="#contact" className="group w-8 h-8 md:w-12 md:h-12 rounded-full border border-gray-400/30 flex items-center justify-center backdrop-blur-md bg-black/20 hover:bg-white/10 hover:border-gray-400/50 transition-all duration-300 cursor-pointer">
+          <Link to="/#contact" aria-label="Contact" className="group w-8 h-8 md:w-12 md:h-12 rounded-full border border-gray-400/30 flex items-center justify-center backdrop-blur-md bg-black/20 hover:bg-white/10 hover:border-gray-400/50 transition-all duration-300 cursor-pointer">
             <svg className="w-3 h-3 md:w-4 md:h-4 text-gray-300 transition-transform duration-300 group-hover:rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 7L7 17M7 17H16M7 17V8" />
             </svg>
-          </a>
+          </Link>
 
-          <a href="#contact" className="px-4 py-1.5 md:px-6 md:py-2.5 rounded-full border border-gray-400/30 flex items-center justify-center backdrop-blur-md bg-black/20 hover:bg-white/10 hover:border-gray-400/50 transition-all cursor-pointer">
+          <Link to="/#contact" className="px-4 py-1.5 md:px-6 md:py-2.5 rounded-full border border-gray-400/30 flex items-center justify-center backdrop-blur-md bg-black/20 hover:bg-white/10 hover:border-gray-400/50 transition-all cursor-pointer">
             <span className="text-gray-300 text-xs md:text-base italic font-light tracking-wider">Contact</span>
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -148,7 +174,7 @@ const Hero = ({ onPreloadComplete }) => {
       >
         <img
           src={centerImage}
-          alt="Hero Center Graphic"
+          alt="Sandesh Pany"
           className="w-full max-w-lg object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
         />
       </div>

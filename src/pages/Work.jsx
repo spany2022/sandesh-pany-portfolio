@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -6,10 +5,6 @@ import { caseStudies } from '../data/caseStudies';
 import ArrowIcon from '../components/ArrowIcon';
 
 const Work = () => {
-  useEffect(() => {
-    document.title = 'Work — Sandesh Pany';
-  }, []);
-
   return (
     <>
       <Navbar />
@@ -38,6 +33,8 @@ const Work = () => {
                 <img
                   src={study.image}
                   alt={`${study.name} website homepage`}
+                  width="1440"
+                  height="900"
                   loading={idx < 2 ? 'eager' : 'lazy'}
                   className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100"
                 />

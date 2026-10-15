@@ -1,11 +1,6 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const NotFound = () => {
-  useEffect(() => {
-    document.title = 'Page not found — Sandesh Pany';
-  }, []);
-
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-black text-white w-full px-6 text-center">
       <p className="text-[#ccff00] text-xs md:text-sm font-bold tracking-widest uppercase mb-6">Error 404</p>

@@ -1,42 +1,8 @@
 import { Link } from 'react-router-dom';
-import { MessageCircle } from 'lucide-react';
 import { caseStudies } from '../data/caseStudies';
+import { products } from '../data/products';
 import ArrowIcon from './ArrowIcon';
-
-// WhatsApp needs the number as digits only, with country code (e.g. 919876543210)
-const whatsappNumber = import.meta.env.VITE_PHONE_NUMBER?.replace(/\D/g, '');
-
-const whatsappLink = (productName) =>
-  `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi Sandesh, I'm interested in the ${productName} for my business.`)}`;
-
-const ai = <span className="font-light italic text-gray-300 lowercase font-serif">ai</span>;
-
-const products = [
-  {
-    name: 'AI Revenue & Payment Follow-Up Assistant',
-    title: <>{ai} Revenue & Payment Follow-Up Assistant</>,
-    description: "Automatically follows up on pending invoices and payments with polite, personalised reminders on WhatsApp, SMS or email — so you get paid on time without awkward chasing.",
-    idealFor: ['Clinics', 'Agencies', 'Contractors', 'Coaching'],
-  },
-  {
-    name: 'AI Lead Recovery & WhatsApp Sales Assistant',
-    title: <>{ai} Lead Recovery & WhatsApp Sales Assistant</>,
-    description: "Replies to new enquiries on WhatsApp instantly, answers common questions, and follows up with leads who went quiet — so no potential customer slips through the cracks.",
-    idealFor: ['Real Estate', 'Salons', 'Clinics', 'Retail'],
-  },
-  {
-    name: 'AI Google Review System',
-    title: <>{ai} Google Review System</>,
-    description: "Sends customers a one-tap Google review request after their visit, reminds those who haven't left one yet, and drafts professional replies to every review — keeping your profile active and trusted.",
-    idealFor: ['Cafes', 'Restaurants', 'Salons', 'Shops'],
-  },
-  {
-    name: 'AI Booking & No-Show Reduction System',
-    title: <>{ai} Booking & No-Show Reduction System</>,
-    description: "Lets customers book any time, then sends automatic confirmations and reminders before every appointment, with easy rescheduling — so fewer empty slots and more of your day stays booked.",
-    idealFor: ['Dental Clinics', 'Salons & Spas', 'Consultants'],
-  },
-];
+import ProductCard from './ProductCard';
 
 // `featured` is the project's position on the home page
 const featuredWork = caseStudies
@@ -82,6 +48,8 @@ const Project = () => {
                 <img
                   src={study.image}
                   alt={`${study.name} website homepage`}
+                  width="1440"
+                  height="900"
                   loading="lazy"
                   className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100"
                 />
@@ -138,54 +106,14 @@ const Project = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 border-t border-white/20">
           {products.map((product, idx) => (
-            <div key={product.name} className={`group/card flex flex-col py-8 md:py-10 border-b border-white/20 ${idx % 2 === 0 ? 'md:pr-10 md:border-r' : 'md:pl-10'}`}>
-              <div className="flex items-center justify-between gap-4 mb-5">
-                <span className="text-white text-lg md:text-2xl font-medium">0{idx + 1}</span>
-                <span className="inline-flex items-center gap-2 text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#ccff00] border border-[#ccff00]/40 rounded-full px-3 py-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#ccff00] animate-pulse"></span>
-                  Early access
-                </span>
-              </div>
-              <h3 className="text-xl md:text-2xl font-black tracking-tight uppercase leading-tight mb-4">
-                {product.title}
-              </h3>
-              <p className="text-gray-400 text-sm md:text-base font-light leading-relaxed mb-6">
-                {product.description}
-              </p>
-
-              <div className="flex flex-wrap items-center gap-2 mb-8">
-                <span className="text-gray-500 text-[11px] uppercase tracking-widest mr-1">Ideal for</span>
-                {product.idealFor.map((type) => (
-                  <span key={type} className="text-xs text-gray-300 border border-white/15 rounded-full px-3 py-1">
-                    {type}
-                  </span>
-                ))}
-              </div>
-
-              {whatsappNumber ? (
-                <a
-                  href={whatsappLink(product.name)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`I'm interested in the ${product.name} — chat on WhatsApp`}
-                  className="mt-auto self-start inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#ccff00] text-black text-xs md:text-sm font-medium hover:bg-[#b3e600] transition-colors"
-                >
-                  <MessageCircle className="w-4 h-4" aria-hidden="true" />
-                  I'm interested
-                  <ArrowIcon className="w-3 h-3 transition-transform duration-300 group-hover/card:rotate-45" />
-                </a>
-              ) : (
-                <Link
-                  to="/#contact"
-                  className="mt-auto self-start inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#ccff00] text-black text-xs md:text-sm font-medium hover:bg-[#b3e600] transition-colors"
-                >
-                  I'm interested
-                  <ArrowIcon className="w-3 h-3 transition-transform duration-300 group-hover/card:rotate-45" />
-                </Link>
-              )}
-            </div>
+            <ProductCard key={product.slug} product={product} index={idx} className={idx % 2 === 0 ? 'md:pr-10 md:border-r' : 'md:pl-10'} />
           ))}
         </div>
+
+        <Link to="/ai-solutions" className="mt-10 inline-flex items-center gap-2 text-sm font-medium text-[#ccff00] border-b border-[#ccff00]/40 pb-1 hover:border-[#ccff00] transition-colors">
+          Explore all AI solutions
+          <ArrowIcon />
+        </Link>
       </div>
 
     </section>

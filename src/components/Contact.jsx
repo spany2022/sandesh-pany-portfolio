@@ -58,6 +58,25 @@ const ContactSection = () => {
     const [errors, setErrors] = useState({});
     const [status, setStatus] = useState('idle'); // idle | submitting | success | error
     const [copied, setCopied] = useState(false);
+    const sectionRef = useRef(null);
+    const [loadVideo, setLoadVideo] = useState(false);
+
+    // Only download the background video when the section is about to scroll into view
+    useEffect(() => {
+        const section = sectionRef.current;
+        if (!section || !('IntersectionObserver' in window)) {
+            setLoadVideo(true);
+            return;
+        }
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                setLoadVideo(true);
+                observer.disconnect();
+            }
+        }, { rootMargin: '600px 0px' });
+        observer.observe(section);
+        return () => observer.disconnect();
+    }, []);
 
     useEffect(() => {
         if (!copied) return;
@@ -118,19 +137,19 @@ const ContactSection = () => {
     const isSubmitting = status === 'submitting';
 
     return (
-        <section id="contact" className="relative min-h-screen bg-[#050505] text-white font-sans flex items-center overflow-hidden [clip-path:inset(0)]">
+        <section ref={sectionRef} id="contact" className="relative min-h-screen bg-[#050505] text-white font-sans flex items-center overflow-hidden [clip-path:inset(0)]">
 
             {/* Background Video */}
             <video
+                src={loadVideo ? contactBgVideo : undefined}
                 autoPlay
                 loop
                 muted
                 playsInline
+                preload="none"
                 aria-hidden="true"
                 className="fixed top-0 left-0 w-full h-[100vh] object-cover z-0"
-            >
-                <source src={contactBgVideo} type="video/mp4" />
-            </video>
+            />
 
             {/* Overlays: darken, blend into the previous section, subtle lime glow */}
             <div className="absolute inset-0 bg-black/75 z-0 pointer-events-none"></div>
@@ -155,7 +174,7 @@ const ContactSection = () => {
                     </h2>
 
                     <p className="text-gray-400 text-base md:text-lg font-light leading-relaxed mb-10 max-w-md">
-                        Have a project in mind? Tell me about your business and what you'd like to build — I'll get back to you with next steps.
+                        Have a project in mind? Tell me about your business and what you'd like to build — I'll get back to you with next steps. Based in Bhubaneswar, working with clients across India.
                     </p>
 
                     {/* Contact cards */}

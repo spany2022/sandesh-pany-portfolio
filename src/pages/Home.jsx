@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Hero from '../components/Hero';
 import Navbar from '../components/Navbar';
@@ -12,10 +12,6 @@ import { scrollToHash } from '../utils/scroll';
 const Home = () => {
   const [preloaderComplete, setPreloaderComplete] = useState(false);
   const { hash } = useLocation();
-
-  useEffect(() => {
-    document.title = 'Sandesh Pany — AI Full-Stack Developer';
-  }, []);
 
   const handlePreloadComplete = () => {
     setPreloaderComplete(true);

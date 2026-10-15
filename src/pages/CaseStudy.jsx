@@ -1,22 +1,20 @@
-import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ArrowIcon from '../components/ArrowIcon';
+import Breadcrumbs from '../components/Breadcrumbs';
 import NotFound from './NotFound';
 import { caseStudies } from '../data/caseStudies';
+import { getIndustryForCaseStudy } from '../data/industries';
 
 const CaseStudy = () => {
   const { slug } = useParams();
   const index = caseStudies.findIndex((study) => study.slug === slug);
   const study = caseStudies[index];
 
-  useEffect(() => {
-    if (study) document.title = `${study.name} — Case Study | Sandesh Pany`;
-  }, [study]);
-
   if (!study) return <NotFound />;
 
+  const industry = getIndustryForCaseStudy(study.slug);
   const next = caseStudies[(index + 1) % caseStudies.length];
   const hostname = new URL(study.url).hostname;
   const position = `${String(index + 1).padStart(2, '0')} / ${String(caseStudies.length).padStart(2, '0')}`;
@@ -32,11 +30,7 @@ const CaseStudy = () => {
       <Navbar />
       <main className="bg-[#050505] text-white pt-32 md:pt-40 pb-24 px-6 md:px-16">
 
-        {/* Back link */}
-        <Link to="/work" className="inline-flex items-center gap-2 text-gray-400 text-xs md:text-sm uppercase tracking-widest hover:text-[#ccff00] transition-colors mb-12 md:mb-16">
-          <ArrowIcon className="w-3 h-3 -rotate-90" />
-          All work
-        </Link>
+        <Breadcrumbs items={[{ name: 'Work', to: '/work' }, { name: study.name, to: `/work/${study.slug}` }]} />
 
         {/* Title */}
         <p className="text-[#ccff00] text-xs md:text-sm font-bold tracking-widest uppercase mb-6">
@@ -81,6 +75,9 @@ const CaseStudy = () => {
             <img
               src={study.image}
               alt={`${study.name} website homepage`}
+              width="1440"
+              height="900"
+              fetchPriority="high"
               className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]"
             />
           </div>
@@ -134,6 +131,19 @@ const CaseStudy = () => {
             ))}
           </div>
         </section>
+
+        {/* Industry page link */}
+        {industry && (
+          <Link to={`/websites/${industry.slug}`} className="group flex flex-col md:flex-row md:items-center justify-between gap-4 border border-white/15 rounded-2xl px-6 py-6 md:px-10 md:py-8 mb-10 md:mb-14 hover:border-[#ccff00]/60 transition-colors">
+            <span>
+              <span className="block text-gray-500 text-xs uppercase tracking-widest mb-2">Own a {industry.singular}?</span>
+              <span className="block text-xl md:text-3xl font-black uppercase tracking-tight group-hover:text-[#ccff00] transition-colors">
+                Website design for {industry.name.toLowerCase()}
+              </span>
+            </span>
+            <ArrowIcon className="w-7 h-7 md:w-10 md:h-10 shrink-0 text-[#ccff00] transition-transform duration-300 group-hover:rotate-45" />
+          </Link>
+        )}
 
         {/* Call to action */}
         <section className="bg-[#ccff00] text-black rounded-sm px-6 py-12 md:p-16 lg:p-20 flex flex-col lg:flex-row lg:items-end justify-between gap-10 mb-24 md:mb-32">

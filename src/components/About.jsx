@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import aboutImage from '../assets/about_section/about_section1.png';
+import aboutImage from '../assets/about_section/about_section1.webp';
 
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -16,6 +16,7 @@ const aboutWords = [
   { text: "Hey," }, { text: "I'm" },
   { text: "Sandesh.", className: "font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400" },
   { text: "An" }, { text: "enthusiastic" }, { text: "AI" }, { text: "full-stack" }, { text: "developer" }, { text: "who" }, { text: "loves" }, { text: "to" }, { text: "build" }, { text: "state-of-the-art" }, { text: "web" }, { text: "and" }, { text: "mobile" }, { text: "applications." },
+  { text: "Based" }, { text: "in" }, { text: "Bhubaneswar,", className: "text-white font-medium" }, { text: "I" }, { text: "work" }, { text: "with" }, { text: "businesses" }, { text: "across" }, { text: "India." },
   { text: "I" }, { text: "love" }, { text: "turning" }, { text: "concepts" }, { text: "into" }, { text: "scalable" }, { text: "products" }, { text: "using" }, { text: "tech" }, { text: "stack" }, { text: "like" },
   { text: "React.js,", className: "text-white font-medium" },
   { text: "Next.js,", className: "text-white font-medium" },
@@ -97,7 +98,10 @@ const About = () => {
           <div className="flex justify-center lg:justify-start pl-0 lg:pl-20">
             <img
               src={aboutImage}
-              alt="About"
+              alt="Sandesh Pany, AI full-stack developer based in Bhubaneswar"
+              width="712"
+              height="1400"
+              loading="lazy"
               className="w-64 md:w-72 lg:w-96 object-contain drop-shadow-2xl"
             />
           </div>

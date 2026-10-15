@@ -22,6 +22,8 @@ const servicesData = [
   },
   {
     id: '02',
+    buttonText: 'WEBSITES BY INDUSTRY',
+    buttonLink: '/websites',
     title: 'FRONTEND DEVELOPMENT',
     description: 'I create fast, responsive, and visually engaging user interfaces that provide seamless user experiences across desktop, tablet, and mobile devices.',
     capabilities: [
@@ -48,6 +50,8 @@ const servicesData = [
   },
   {
     id: '04',
+    buttonText: 'EXPLORE AI SOLUTIONS',
+    buttonLink: '/ai-solutions',
     title: 'AI & AUTOMATION',
     description: 'I integrate artificial intelligence into applications to automate workflows, improve productivity, and create intelligent user experiences using modern AI technologies.',
     capabilities: [

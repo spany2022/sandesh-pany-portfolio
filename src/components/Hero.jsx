@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
-import centerImage from '../assets/hero_assets/hero_center1.png';
+import centerImage from '../assets/hero_assets/hero_center1.webp';
 
 // The intro plays on every page load / refresh. It only skips when the visitor
 // navigates back to Home from another page of the site (e.g. a case study).
@@ -142,7 +142,9 @@ const Hero = ({ onPreloadComplete }) => {
           ref={textRef}
           className="text-[clamp(3.5rem,15vw,14rem)] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-300 to-gray-800 drop-shadow-2xl pr-4 md:pr-8 leading-none uppercase"
         >
-          {text}
+          {/* Readable heading for search engines & screen readers; the animated word is decorative */}
+          <span className="sr-only">Sandesh Pany — Web Designer & AI Full-Stack Developer in Bhubaneswar</span>
+          <span aria-hidden="true">{text}</span>
         </h1>
 
         <p
@@ -174,7 +176,10 @@ const Hero = ({ onPreloadComplete }) => {
       >
         <img
           src={centerImage}
-          alt="Sandesh Pany"
+          alt="Sandesh Pany, web designer and AI developer in Bhubaneswar"
+          width="954"
+          height="1046"
+          fetchPriority="high"
           className="w-full max-w-lg object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
         />
       </div>
